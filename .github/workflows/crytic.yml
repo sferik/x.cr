@@ -1,4 +1,4 @@
-name: tests
+name: mutation tests
 on: [push, pull_request]
 jobs:
   build:
@@ -9,4 +9,4 @@ jobs:
         with:
           crystal: 1.11.2
       - run: shards install
-      - run: crystal spec --order random
+      - run: ./bin/crytic test
