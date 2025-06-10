@@ -9,4 +9,4 @@ jobs:
         with:
           crystal: 1.11.2
       - run: shards install
-      - run: ./bin/crytic test --preamble="require \"spec\"\nSpec.fail_fast = true\n"
+      - run: ./bin/crytic test --preamble=$'require "spec"\nSpec.fail_fast = true\n'
