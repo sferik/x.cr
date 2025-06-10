@@ -1,0 +1,21 @@
+name: x
+version: 0.15.4
+authors:
+  - Erik Berlin <sferik@gmail.com>
+crystal: ">= 1.11"
+license: MIT
+
+# This shard has no runtime dependencies
+
+# Development dependencies
+development_dependencies:
+  ameba:
+    github: crystal-ameba/ameba
+    version: "~> 1.6"
+  crytic:
+    github: hanneskaeufler/crytic
+    version: "~> 9.0"
+  webmock:
+    github: manastech/webmock.cr
+    branch: master
+

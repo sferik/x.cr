@@ -1,31 +1,32 @@
-[![tests](https://github.com/sferik/x-ruby/actions/workflows/test.yml/badge.svg)](https://github.com/sferik/x-ruby/actions/workflows/test.yml)
-[![mutation tests](https://github.com/sferik/x-ruby/actions/workflows/mutant.yml/badge.svg)](https://github.com/sferik/x-ruby/actions/workflows/mutant.yml)
-[![linter](https://github.com/sferik/x-ruby/actions/workflows/lint.yml/badge.svg)](https://github.com/sferik/x-ruby/actions/workflows/lint.yml)
-[![typer checker](https://github.com/sferik/x-ruby/actions/workflows/steep.yml/badge.svg)](https://github.com/sferik/x-ruby/actions/workflows/steep.yml)
-[![maintainability](https://api.codeclimate.com/v1/badges/40bbddf2c9170742ca9e/maintainability)](https://codeclimate.com/github/sferik/x-ruby/maintainability)
-[![gem version](https://badge.fury.io/rb/x.svg)](https://rubygems.org/gems/x)
+[![tests](https://github.com/sferik/x.cr/actions/workflows/test.yml/badge.svg)](https://github.com/sferik/x.cr/actions/workflows/test.yml)
+[![mutation tests](https://github.com/sferik/x.cr/actions/workflows/crytic.yml/badge.svg)](https://github.com/sferik/x.cr/actions/workflows/crytic.yml)
+[![linter](https://github.com/sferik/x.cr/actions/workflows/lint.yml/badge.svg)](https://github.com/sferik/x.cr/actions/workflows/lint.yml)
+[![maintainability](https://api.codeclimate.com/v1/badges/40bbddf2c9170742ca9e/maintainability)](https://codeclimate.com/github/sferik/x.cr/maintainability)
 
-# A [Ruby](https://www.ruby-lang.org) interface to the [X API](https://developer.x.com)
+# A [Crystal](https://crystal-lang.org) interface to the [X API](https://developer.x.com)
+This shard is implemented in Crystal.
 
 ## Follow
 
-For updates and announcements, follow [this gem](https://x.com/gem) and [its creator](https://x.com/sferik) on X.
+For updates and announcements, follow [this shard](https://x.com/gem) and [its creator](https://x.com/sferik) on X.
 
 ## Installation
 
-Install the gem and add to the application's Gemfile:
+Add the dependency to your `shard.yml`:
 
-    bundle add x
+```yaml
+dependencies:
+  x:
+    github: sferik/x.cr
+```
 
-Or, if Bundler is not being used to manage dependencies:
-
-    gem install x
+Then run `shards install`
 
 ## Usage
 
 First, obtain X credentials from <https://developer.x.com>.
 
-```ruby
+```crystal
 require "x"
 
 x_credentials = {
@@ -40,25 +41,30 @@ x_client = X::Client.new(**x_credentials)
 
 # Get data about yourself
 x_client.get("users/me")
-# {"data"=>{"id"=>"7505382", "name"=>"Erik Berlin", "username"=>"sferik"}}
+# => {"data" => {"id" => "7505382", "name" => "Erik Berlin", "username" => "sferik"}}
 
 # Post
-post = x_client.post("tweets", '{"text":"Hello, World! (from @gem)"}')
-# {"data"=>{"edit_history_tweet_ids"=>["1234567890123456789"], "id"=>"1234567890123456789", "text"=>"Hello, World! (from @gem)"}}
+post = x_client.post("tweets", "{\"text\":\"Hello, World! (from @shard)\"}")
+# => {"data" => {"edit_history_tweet_ids" => ["1234567890123456789"], "id" => "1234567890123456789", "text" => "Hello, World! (from @shard)"}}
 
 # Delete the post
 x_client.delete("tweets/#{post["data"]["id"]}")
-# {"data"=>{"deleted"=>true}}
+# => {"data" => {"deleted" => true}}
 
 # Initialize an API v1.1 client
 v1_client = X::Client.new(base_url: "https://api.twitter.com/1.1/", **x_credentials)
 
 # Define a custom response object
-Language = Struct.new(:code, :name, :local_name, :status, :debug)
+struct Language
+  property code : String
+  property name : String
+  property local_name : String
+  property status : String
+  property debug : Bool
+end
 
 # Parse a response with custom array and object classes
-languages = v1_client.get("help/languages.json", object_class: Language, array_class: Set)
-# #<Set: {#<struct Language code="ur", name="Urdu", local_name="اردو", status="beta", debug=false>, …
+languages = v1_client.get("help/languages.json", object_class: Language, array_class: Array(Language))
 
 # Access data with dots instead of brackets
 languages.first.local_name
@@ -70,7 +76,7 @@ ads_client = X::Client.new(base_url: "https://ads-api.twitter.com/12/", **x_cred
 ads_client.get("accounts")
 ```
 
-See other common usage [examples](https://github.com/sferik/x-ruby/tree/main/examples).
+See other common usage [examples](https://github.com/sferik/x.cr/tree/main/examples).
 
 ## History and Philosophy
 
@@ -107,7 +113,7 @@ If this entire library is implemented in just 500 lines of code, why should you 
 
 ## Sponsorship
 
-The X gem is free to use, but with X API pricing tiers, it actually costs money to develop and maintain. By contributing to the project, you help us:
+The X shard is free to use, but with X API pricing tiers, it actually costs money to develop and maintain. By contributing to the project, you help us:
 
 1. Maintain the library: Keeping it up-to-date and secure.
 2. Add new features: Enhancements that make your life easier.
@@ -123,19 +129,19 @@ Building and maintaining an open-source project like this takes a considerable a
 
 1. Clone the repo:
 
-       git clone git@github.com:sferik/x-ruby.git
+       git clone git@github.com:sferik/x.cr.git
 
 2. Enter the repo’s directory:
 
-       cd x-ruby
+       cd x.cr
 
-3. Install dependencies via Bundler:
+3. Install dependencies:
 
-       bin/setup
+       shards install
 
-4. Run the default Rake task to ensure all tests pass:
+4. Run the tests:
 
-       bundle exec rake
+       crystal spec
 
 5. Create a new branch for your feature or bug fix:
 
@@ -143,30 +149,15 @@ Building and maintaining an open-source project like this takes a considerable a
 
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/sferik/x-ruby.
+Bug reports and pull requests are welcome on GitHub at https://github.com/sferik/x.cr.
 
 Pull requests will only be accepted if they meet all the following criteria:
 
-1. Code must conform to [Standard Ruby](https://github.com/standardrb/standard#readme). This can be verified with:
-
-       bundle exec rake standard
-
-2. Code must conform to the [RuboCop rules](https://github.com/rubocop/rubocop#readme). This can be verified with:
-
-       bundle exec rake rubocop
-
-3. 100% C0 code coverage. This can be verified with:
-
-       bundle exec rake test
-
-4. 100% mutation coverage. This can be verified with:
-
-       bundle exec rake mutant
-
-5. RBS type signatures (in `sig/x.rbs`). This can be verified with:
-
-       bundle exec rake steep
+1. Code must be formatted with `crystal tool format`.
+2. All specs must pass (`crystal spec`).
+3. 100% code coverage.
+4. 100% mutation coverage.
 
 ## License
 
-The gem is available as open source under the terms of the [MIT License](https://opensource.org/licenses/MIT).
+The shard is available as open source under the terms of the [MIT License](https://opensource.org/licenses/MIT).
